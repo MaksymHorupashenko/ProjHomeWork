@@ -1,47 +1,69 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Animal struct {
 	Name string
 }
 
 type Cage struct {
-	Animal Animal
+	Animal *Animal
 }
 
-func (c *Cage) AddAnimal(animal Animal) {
+func (c *Cage) AddAnimal(animal *Animal) {
 	c.Animal = animal
 }
 
 func (c *Cage) InfoCage() {
-	fmt.Printf("Клітка звіра: %s\n", c.Animal.Name)
+	if c.Animal != nil {
+		fmt.Printf("Клітка звіра: %s\n", c.Animal.Name)
+	} else {
+		fmt.Println("Клітка порожня")
+	}
 }
 
 type Zookeeper struct {
-	Name string
+	Name  string
+	Cages []*Cage
 }
 
-func (z *Zookeeper) CollectAnimal(animal Animal) {
-	cage := Cage{Animal: animal}
-	fmt.Printf("%s закриває звіра %s у клітку\n", z.Name, animal.Name)
-	cage.InfoCage()
+func (z *Zookeeper) CollectAnimal(animal *Animal, cageIndex int) {
+	if cageIndex < len(z.Cages) {
+		z.Cages[cageIndex].AddAnimal(animal)
+		fmt.Printf("%s закриває звіра %s у клітку\n", z.Name, animal.Name)
+		z.Cages[cageIndex].InfoCage()
+	} else {
+		fmt.Println("Немає такої клітки")
+	}
 }
 
 func main() {
 	fmt.Println("Звірі втекли з кліток!")
 
-	animal1 := Animal{"Лев"}
-	animal2 := Animal{"Тигр"}
-	animal3 := Animal{"Зебра"}
-	animal4 := Animal{"Жираф"}
-	animal5 := Animal{"Мавпа"}
+	
+	cage1 := &Cage{}
+	cage2 := &Cage{}
+	cage3 := &Cage{}
+	cage4 := &Cage{}
+	cage5 := &Cage{}
 
-	zookeeper := Zookeeper{"Maксим"}
+	zookeeper := &Zookeeper{
+		Name:  "Максим",
+		Cages: []*Cage{cage1, cage2, cage3, cage4, cage5},
+	}
 
-	zookeeper.CollectAnimal(animal1)
-	zookeeper.CollectAnimal(animal2)
-	zookeeper.CollectAnimal(animal3)
-	zookeeper.CollectAnimal(animal4)
-	zookeeper.CollectAnimal(animal5)
+	animal1 := &Animal{"Лев"}
+	animal2 := &Animal{"Тигр"}
+	animal3 := &Animal{"Зебра"}
+	animal4 := &Animal{"Жираф"}
+	animal5 := &Animal{"Мавпа"}
+
+	zookeeper.CollectAnimal(animal1, 0)
+	zookeeper.CollectAnimal(animal2, 1)
+	zookeeper.CollectAnimal(animal3, 2)
+	zookeeper.CollectAnimal(animal4, 3)
+	zookeeper.CollectAnimal(animal5, 4)
 }
+
