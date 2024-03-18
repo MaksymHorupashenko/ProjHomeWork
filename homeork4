@@ -1,0 +1,98 @@
+//task 1
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func containsSub(str, substr string) bool {
+	if len(substr) > len(str) {
+		return false
+	}
+	for i := 0; i <= len(str)-len(substr); i++ {
+		found := true
+		for j := 0; j < len(substr); j++ {
+			if str[i+j] != substr[j] {
+				found = false
+				break
+			}
+		}
+		if found {
+			return true
+		}
+	}
+	return false
+}
+
+func search(text []string, query string) []string {
+	var matches []string
+	for _, line := range text {
+		if containsSub(line, query) {
+			matches = append(matches, line)
+		}
+	}
+	return matches
+}
+
+func main() {
+	fmt.Println("Введіть текст у текстовий редактор. Після завершення введіть 'end' на новому рядку:")
+	
+	scanner := bufio.NewScanner(os.Stdin)
+	var text []string
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "end" {
+			break
+		}
+		text = append(text, line)
+	}
+
+	fmt.Println("Введіть рядок для пошуку:")
+	var query string
+	fmt.Scanln(&query)
+
+	results := search(text, query)
+	fmt.Println("Результати пошуку:")
+	for _, result := range results {
+		fmt.Println(result)
+	}
+}
+
+//task 2
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+type StructType struct {
+	ID int
+}
+
+func sortedSlice(input []StructType) []StructType {
+	seen := make(map[int]bool)
+	var unique []StructType
+
+	for _, v := range input {
+		if !seen[v.ID] {
+			unique = append(unique, v)
+			seen[v.ID] = true
+		}
+	}
+
+	sort.Slice(unique, func(i, j int) bool {
+		return unique[i].ID < unique[j].ID
+	})
+
+	return unique
+}
+
+func main() {
+	input := []StructType{{11}, {7}, {35}, {2}}
+
+	result := sortedSlice(input)
+	fmt.Println(result)
+}
