@@ -1,0 +1,60 @@
+package main
+
+
+import (
+	"fmt"
+	"strings"
+)
+
+func main() {
+	texts := []string{
+		"Hash  map data structures use a hash function, which turns a key into an index within an underlying array.",
+		"The hash function can be used to access an index when inserting a value or retrieving a value from a hash map.",
+		"Hash map underlying data structure", "Hash maps are built on top of an underlying array data structure using an indexing system.",
+		"Each index in the array can store one key-value pair.",
+		"If the hash map is implemented using chaining for collision resolution, each index can store another data structure such as a linked list, which stores all values for multiple keys that hash to the same index.",
+		"Each Hash Map key can be paired with only one value. However, different keys can be paired with the same value.",
+	}
+
+	index := buildIndex(texts)
+
+	foundTexts := findTextsByWord(index, "hash")
+
+	fmt.Println("Рядки, які містять слово 'hash':")
+	for _, text := range foundTexts {
+		fmt.Println(text)
+	}
+}
+
+func buildIndex(texts []string) map[string][]int {
+	index := make(map[string][]int)
+	for i, text := range texts {
+		words := strings.Fields(text)
+		for _, word := range words {
+			index[word] = append(index[word], i)
+		}
+	}
+	return index
+}
+
+func findTextsByWord(index map[string][]int, word string) []string {
+	texts := []string{
+		"Hash map data structures use a hash function, which turns a key into an index within an underlying array.",
+		"The hash function can be used to access an index when inserting a value or retrieving a value from a hash map.",
+		"Hash map underlying data structure", "Hash maps are built on top of an underlying array data structure using an indexing system.",
+		"Each index in the array can store one key-value pair.",
+		"If the hash map is implemented using chaining for collision resolution, each index can store another data structure such as a linked list, which stores all values for multiple keys that hash to the same index.",
+		"Each Hash Map key can be paired with only one value. However, different keys can be paired with the same value.",
+	}
+	indices, ok := index[word]
+
+	if !ok {
+		return nil
+	}
+
+	var foundTexts []string
+	for _, idx := range indices {
+		foundTexts = append(foundTexts, texts[idx])
+	}
+	return foundTexts
+}
